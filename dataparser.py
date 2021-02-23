@@ -3,26 +3,39 @@ import json
 from collections import *
 from pathlib import Path
 
+
 def ni(itr):
     return int(next(itr))
+
 
 # parses the next string of itr as a list of integers
 def nl(itr):
     return [int(v) for v in next(itr).split()]
 
 
-def parse(inp):
+def parse(inp):  # get the input file as string
     itr = (line for line in inp.split('\n'))
     ns = argparse.Namespace()
     # TODO: fill ns
-
+    ns.M, ns.T2, ns.T3, ns.T4 = nl(itr)
+    pizzas = []
+    for i in range(ns.M):
+        L = next(itr).split()
+        ingred = L[1:]
+        pizza = {'id': i,
+                 'ingredients': ingred
+                 }
+        pizzas.append(pizza)
+    ns.pizzas = pizzas
     return ns
+
 
 class FlexibleEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, argparse.Namespace):
             return vars(obj)
         return json.JSONEncoder.default(self, obj)
+
 
 def parse2json(inp):
     ns = parse(inp)
